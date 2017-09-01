@@ -1,0 +1,22 @@
+{
+  "name": "04_npm_install_require",
+  "version": "1.0.0",
+  "description": "Práctica de utilización de npm init, npm install y require de modulos descargados localmente en mi proyecto.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Jonatandb",
+    "node",
+    "nodejs",
+    "npm",
+    "require",
+    "Udemy"
+  ],
+  "author": "Jonatandb@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}

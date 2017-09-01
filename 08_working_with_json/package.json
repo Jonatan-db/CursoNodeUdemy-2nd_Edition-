@@ -1,0 +1,16 @@
+{
+    "name": "07_user_input_with_yargs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 0",
+        "jonatan": "echo \"Se ejecuto el script jonatan\""
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "lodash": "^4.17.4",
+        "yargs": "^4.7.1"
+    }
+}

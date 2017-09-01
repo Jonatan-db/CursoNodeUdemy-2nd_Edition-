@@ -1,0 +1,20 @@
+{
+  "name": "03_notes_node",
+  "version": "1.0.0",
+  "description": "Proyecto de prueba del curso de Udemy de Node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "jonatandb",
+    "udemycourse"
+  ],
+  "author": "Jonatandb@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}

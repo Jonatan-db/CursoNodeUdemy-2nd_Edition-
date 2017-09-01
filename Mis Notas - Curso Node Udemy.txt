@@ -1,0 +1,354 @@
+
+	Descargar Node.js desde	https://nodejs.org/en/
+	
+	Instalar la versión "Current"
+	
+	Verificar que se instaló, ejecutando desde la consola: node -v
+	
+	
+	¿Que es Node?
+		Es un runtime de javascript, que usa el motor V8.
+	
+	¿Que es V8?
+		Es un motor de javascript open source escrito en C++, que toma codigo javascript y lo compila en código maquina. 
+		V8 se utiliza dentro de Chrome y de Node.js.
+		
+	Consola de Node.js en Windows y en Chrome:
+		Es la misma que se encuentra yendo a las opciones de desarrollador de Chrome (F12), solapa Console.
+		Puede recibir los mismos comandos que Node desde la consola de Windows.
+		
+		Diferencias:
+			Node tiene caracteriscas como manipulación del sistema de archivos.
+			El navegador tiene caracteristicas para manipulación de lo que se muestra en la ventana del navegador.
+			
+			Chrome			Node
+			window			global		
+			document		process		
+			
+			Objeto window, similar a global en Node:
+				En el navegador se utiliza el objeto window cuando se trabaja con javascript, window es el objeto global que
+					almacena todo a lo que se tiene acceso (manipulación de css, variables de Google analitycs, etc)
+				Cualquier variable que se crea en javascript se encuentra dentro del objeto window.
+			
+			Objeto global, similar a window en Chrome:
+				Contiene casi lo mismo que el objeto window, con algunas excepciones.
+			
+			Objeto document, similar a process en Node:
+				Almacena una referencia al DOM, por lo que contiene todo lo que se muestra en la pagina.
+				Por medio de document se puede modificar todo lo que contiene la pagina web actual.
+			
+			Objeto process, similar a document en Chrome:
+				Contiene información acerca del proceso de Node que se está ejecutando.
+				También provee métodos que permiten, entre otras cosas, finalizar el proceso de Node actual: process.exit(0);
+
+	Los proyectos se crean en carpetas, cada proyecto vive dentro de su propia carpeta.
+	
+	String templates gracias a EC6:
+		fs.appendFileSync('saludos.txt', `Bienvenido ${variable}!`); ** Importante: Se utiliza una comilla especial, no la simple.
+		
+	Módulos:
+		Son librerías de funcionalidad, Node ya provee muchos.
+		Se pueden importar nuevos, descargarlos de internet, etc.
+		Para ver la lista de módulos disponibles en Node consultar: nodejs.org/api
+		Para utilizarlos se deben importar utilizando "require":  
+			const moduloimportado = require('modulodeseado');	//Importo el módulo. Se declara con const ya que no se modificará.
+			moduloimportado.metodo();										//Utilizo una funcionalidad incluída en él, en este caso ejecuto un método.
+	
+	"module":
+		Variable global que existe dentro de todos los archivos de una aplicación de Node, la cual contiene varios objetos y propiedades.
+		"exports": es un objeto al que se le pueden agregar propiedades y métodos, las cuales pueden ser accedidas cuando se importa el módulo.
+			Ejemplo:
+				Creo un archivo llamado archivomodulo.js con esto:
+					module.exports.metododentrodelmodulo = () => { console.log('algun valor') };
+				Desde el archivo que va a importar para consumir al modulo hago lo siguiente:
+					const modulo = require('./archivomodulo.js');
+					modulo.metododentrodelmodulo();	// Se ejecuta el metodo expuesto por el modulo y se muestra el string 'algun valor' en la consola.
+
+	NPM:		Node package manager
+		Se utiliza para obtener, instalar y generar módulos
+		npm -v		Muestra la versión de npm instalada.
+		npm init		Establece la carpeta de trabajo actual como un módulo creando simplemente un archivo llamado: "package.json".
+						NPM mediante un asistente, solicita información sobre el proyecto y la guarda en el archivo package.json.
+		package.json	Entre otras cosas, lo mas importante es que especifica los módulos de los que depende mi aplicación.
+		npmjs.com		Web donde se pueden buscar modulos, leer sobre su uso y contenido, comentarios, estadisticas, etc.
+		npm install					Lee el arhcivo package.json y crea una carpeta node-modules donde descarga y descomprime todas las "dependencias".
+		npm install modulo 			Crea una carpeta llamada node-modules, donde crea otra con el nombre del modulo especificado y descarga su contenido.
+		npm install modulo --save 	Instala el módulo y además lo agrega como dependencia de nuestro proyecto, en el archivo package.json existente.
+												Luego de esto se puede hacer require del módulo desde nuestra aplicación.
+												Cuando Node intenta hacer un require, primero busca entre los módulos del core de Node, 
+												luego busca en la carpeta local de nuestro proyecto llamada node-modules.
+												Si no se utiliza "--save", igual se crea la carpeta node-modules y se puede hacer requiere y utilizar el módulo,
+												pero si se cambia de lugar la aplicación y no se mueve también la carpeta node-modules, al ejecutar la aplicación
+												va a arrojar el error de que no encuentra el módulo, por mas que se ejecute npm install, ya que npm install
+												se basa en las dependencias especificadas en el archivo package.json para crear la carpeta node-modules y 
+												descargar e instalar ahí los módulos especificados.
+		npm install:		Lee el archivo package.json y crea la carpeta node-modules, donde descarga y descomprime todos los módulos dependientes.
+		npm run nombreDeScript		Ejecuta el o los comandos especificados en el objeto dentro de la sección scripts del package.json 
+												que tenga nombre "nombreDeScript".
+		npm start			Igual que npm run "nombreDeScript", salvo que como "Start" es uno de los pasos del ciclo de vida de una app de node, si el
+								script existe (Se creó la entrada "start" dentro del objeto scripts) se puede ejecutar sin especificar "run".
+								Si no se crea la sección "start" dentro del objeto Scripts del package.json, npm start va a ejecutar "node server.js".
+		npm test			Funciona como npm start.
+		
+	Restart automático de apps cuando se detecta un cambio en el código:
+		Cuando se modifica el código fuente, por lo general hay que ir a la consola a detener y volver a iniciar la aplicación (C:\>node miapp.js).
+		Para solucionar esto se puede utilizar el comando Nodemon.
+		Nodemon se debe instalar de manera global, mediante "npm install nodemon -g", ya que se utiliza para ejecutar apps en lugar de usar "node app.js" y se utiliza como un comando mas:
+			C:\>nodemon app.js		A partir de este momento, cada vez que se modifique el fuente de la aplicación, 
+												la misma se reiniciará automaticamente. 
+												Por lo tanto, nodemon, no se agrega al archivo package.json ni se le realiza un require.
+	
+Getting Input From User 		- Sección 3, clase 13 -  https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525246?start=0
+
+	"process.argv" contiene el conjunto de parámetros pasados al ejecutarse la aplicación: console.log(process.argv);
+	Al ejecutar algo como "node app.js prueba", se puede acceder al comando "prueba" o cualquiera que se haya pasado, con:
+		var comando = process.argv[2];
+		console.log("Comando pasado: " + comando);
+	
+Simplified Input With Yargs	 - Sección 3, clase 14 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525248?start=0
+
+	npm install yargs@4.7.1 --save				Instalo el módulo Yargs en cierta versión específica (especificar la versión es opcional)
+															-- save: con esto se registra el módulo como dependencia en el archivo package.json.
+	const yargs = require('yargs');				Importo el módulo
+	var argv = yargs.argv;							Capturo los argumentos leídos por Yargs
+	Ahora si ejecuto por ej:  node miapp.js --titulo="lala"		Voy a poder acceder a los parámetros pasados de la siguiente manera:
+		console.log('argv.titulo');		--> Muestra 'lala'
+
+Working With JSON				 - Sección 3, clase 15 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525250?start=0
+
+	JSON:		Javascript object notation.		Representa con texto objetos javascript.
+	Se puede convertir un objeto a un string utilizando JSON.stringify(objeto).
+	Se puede convertir un string (en JSON) a objeto nuevamente utilizando JSON.parse(stringObjeto).
+	
+Adding and Saving Notes		- Sección 3, clase 16 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525252?start=0
+ 
+	Uso de método filter de array:			var duplicates = miArray.filter( (nota) => nota.titulo === titulo);
+														Es lo mismo que: var duplicates = miArray.filter( (nota) => { return nota.titulo === titulo; } );
+ 
+Refactoring For Reusability		- Sección 3, clase 17 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525254?start=0
+
+Removing a Note						- Sección 3, clase 18 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525256?start=0
+
+Reading Notes and Reusability 	- Sección 3, clase 19 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525258?start=0
+ 
+Debugging Node.js Applications - Sección 3, clase 20 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525260?start=0
+
+	node inspect app.js			Ejecuta la aplicación en modo debug		*** NO FUNCIONA CON NODE V6!, se debe usar "node debug app.js".
+	list(10)							Muestra las siguientes n lineas de código.
+	n			(Next	)				Ejecuta las lineas una por una.
+	c			(Continue)			Continua con la ejecución total de la aplicación.
+	Ctrl+c 	(2 veces)			Fiinaliza el modo debug.
+	repl(Revaluate print loop)	Este modo permite conocer y manipular el contenido de los objetos y variables (se pueden hacer sumas, consultas, etc.)
+											Se sale del modo repl con Ctrl+C, lo que nos devuelve al modo debug.
+	debugger;						Palabra clave que establece un breakpoint que se activará cuando se esté debugeando la aplicación (con inspect/debug).
+											Un vez que se detiene la aplicación en este punto, se puede entrar al modo repl y ver el contenido de las variables.
+
+Debugging via Chrome Dev Tools - Sección 3, clase 21 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525262?start=0
+
+	node --inspect-brk app.js	(Solo a partir de node v.8) Ejecuta node en modo debug desde Chrome.	(https://nodejs.org/en/docs/inspector/)
+												En V6 usar: node --inspect --debug-brk app.js 
+										A partir de este momento, se debe abrir Chrome e ir a la url: chrome://inspect y hacer click en 
+											"Open dedicated DevTools for Node".
+										Una vez ahí, en la solapa Sources se puede ver el mismo código que cuando se accede en modo debug desde la consola ya
+											se pueden establecer breakpoinst para debuggear y ejecutar el código linea por linea y demás.
+										Con Escape se abre y cierra la consola inferior que funciona igual que el modo "repl", donde se puede ejecutar javascript.
+	nodemon --inspect-brk app.js	Funciona de la misma manera, solo que la app se reiniciará cada vez que sea modificado el fuente pero la ventaja
+													es que no hace falta reiniciar Chrome.
+
+Listing Notes - Sección 3, clase 22 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525264?start=0
+
+Requiring Arguments and Advanced Yargs - Sección 3, clase 23 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525266?start=0
+
+	Más usos de Yargs:
+		Se puede agregar a la utilización de Yargs, la llamada a los métodos command() y help():
+			var argv = yargs.command('list', 'Muestra la lista de notas').help().argv;
+				command() acepta varios parámetros, que permite definir una 'ayuda' en pantalla sobre como utilizar la app.
+				Con la definición anterior, cuando se ejecute la app sin parámetro alguno, pero agregando '--help', va a aparecer una leyenda indicando 
+				que se dispone del comando 'list', el cual 'Muestra la lista de notas'.
+				Tambien se puede configurar por ejemplo el parámetro 'add' de la siguiente manera:
+					var argv = yargs
+					.command('add', 'Agrega una nueva nota', {
+						title: {
+							describe: 'Titutlo de la nota',
+							demand: true,
+							alias: 't'
+						},
+						body: {
+								describe: 'Cuerpo de la nota',
+								demand: true,
+								alias: 'b'
+							}
+						})
+					.help()
+					.argv;
+					De esta manera, se puede ejecutar por ejemplo: node app.js add -t=Titulo -b=Cuerpo
+						o también: node app.js add --title=Titulo --body=Cuerpo
+					También se puede especificar que title y body sean obligatorios.
+	
+Arrow Functions - Sección 3, clase 24 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525270?start=0
+	
+	Uso básico:
+		var square = (x) => {
+			var result = x * x;
+			return result;
+		}
+		console.log(square(9));
+		
+	Uso resumido 'Expresion sintax':
+		var square = (x) => x * x;
+		console.log(square(9));
+		
+	Cuando la funcion arrow recibe solo un parámetro, se pueden omitir los paréntesis:
+		var square = x => x * x;
+		console.log(square(9));
+		*	Si se esperan cero argumentos o mas de uno, se deben utilizar los parentesis, en el caso no esperar argumentos se dejan vacios: ()
+
+	Diferencias usando funciones comunes y funciones arrow:
+	Usando arrow functions dentro de un objeto, no se puede acceder a la palabra clave 'this' para referenciar propiedades del objeto
+		ni tampoco se puede utilizar el objeto 'arguments' implicito de los métodos en javascript:
+		var user = {
+			name : 'Jony',
+			sayHi: () => {
+				console.log(`(arrow1)Hola ` + name);    	// Error:  name is not defined.
+				console.log(`Hola ` + this.name);			// Hola undefined
+			},
+			sayHi2: (a, b) => {
+				console.log("Parámetros recibidos: " + arguments);		
+			}
+		user.sayHi();							// Devuelve: Hola undefined
+		user.sayHi2("lala", "lele");			// Devuelve: Parámetros recibidos: (Acá muestra el contenido del objeto process o global).
+		
+		Todo esto si se puede utilizar si el método del objeto es una función común, en un lugar de ser una arrow function:
+				var user = {
+					name : 'Jony',
+					sayHi(dato, dato2) {
+									console.log(`Hola ` + this.name);							// Devuelve: Hola Jony
+									console.log("Parámetros recibidos: " + arguments);	// Devuelve: Parámetros recibidos: (la lista de parámetros pasados)
+			}
+		}
+		
+ 
+Section Intro - Sección 4, clase 25 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525274?start=0
+
+Async Basics - Sección 4, clase 26 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525276?start=0
+
+	Llamada asincronica básica:
+		console.log('Iniciando app... ' + new Date().toTimeString());
+		setTimeout( () => {
+			console.log('Ejecución asincronica finalizada. ' + new Date().toTimeString());
+		}, 2000);
+		console.log('Finalizando app. ' + new Date().toTimeString());
+	Con el uso de la función setTimeout se establece que el código pasado como primer argumento, se ejecute luego de la cantidad de milisegundos indicados como
+		segundo argumento.
+		Lo importante a tener en cuenta es que la ejecución de la aplicación continúa luego de pasar por la linea de setTimeout y no se queda bloqueada esperando
+			a que pasen los 2 segundos para luego ejecutar el último console.log, esto es porque la llamada al console.log dentro de setTimeout es asincronica.
+	La aplicación primero ejecutará la primera y última lineas y luego de 2 segundos ejecutará y mostrará el mensaje "Ejecución asincronica finalizada.".
+	
+Call Stack & Event Loop - Sección 4, clase 27 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525278?start=0
+
+	Call stack:	
+					Pila de llamadas donde se apilas las sentencias a ejecutar, comenzando por Main().
+	Node APIs:
+					Punto donde se almacenan las llamadas asincronicas hasta que éstas finalizan su ejecución o se les acaba el tiempo.
+	Callback queue:
+					Punto donde se almacenan las ejecuciónes asincronicas cuando están listas para ser ejecutadas.
+					Ahí las funciones van a esperar a que el Event loop detecte que el call stack esté libre y cuando esto suceda entonces serán ejecutadas.
+	Event Loop:
+					Mecanismo que cada vez que detecta que el call stack está libre, ejecuta lo primero que esté encolado en el Callback queue.
+					
+Callback Functions & APIs - Sección 4, clase 28 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525280?start=0
+
+	Función callback:		
+							Es una función que se pasa como argumento a otra función y que cuando pasa algo en esta segunda función se ejecuta la primera pasada como argumento.
+
+	Instalación de extensión de Chrome: JSON View, para ver resultados JSON formateados y poder colapsar sus nodos desde Chrome.
+	
+	Obtención de JSON con información de Google sobre una dirección utilizando la API de Google Maps desde Chrome:
+		http://maps.googleapis.com/maps/api/geocode/json?address=18 de julio 754 garin buenos aires
+	
+	Instalación y uso del paquete (módulo) de npm "request" para hacer peticiones http de manera mas simple:
+		npm install request --save
+		
+		Uso de request:
+			request( objeto con propiedades varias (url, json, etc), callback);
+				url: dirección a la que se hace el request
+				json: parametro booleano para definir si el resultado se devuelve en formato json o no
+				callback: funcion/metodo a ejecutar cuando se obtenga la respuesta desde la url indicada
+								la firma de este metodo suele ser la siguiente:
+									callback(error, response, body)
+										donde:
+											error: null si el servidor no devolvió ningún error
+											response: booleano que indica si hubo una respuesta
+											body: resultado de la respuesta (es un objeto por lo que se puede formatear usando JSON.stringify(body, undefined, 2) para verlo mas claramente).
+							esta funcion se puede reemplazar por una funcion arrow, como está hecho en el ejemplo de mas abajo.
+							
+		Ejemplo de uso:
+		
+		const req = require('request');
+		req(	{
+					url: 'http://maps.googleapis.com/maps/api/geocode/json?address=18 de julio 754 garin buenos aires',
+					json: true
+				},
+				(error, response, body) => {
+					(error) ? console.log("Error: ", error) : null;
+					console.log("Response: ", response && response.statusCode === 200);
+					console.log("Body: ", body);
+				}
+			);
+	
+Pretty Printing Objects - Sección 4, clase 29 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525282?start=0
+
+	Formateo de la representacion en string de un JSON utilizando el tercer parámetro de la llamada a JSON.stringify(objeto, opcionesDeFiltrado, identacion).
+	
+What's Makes up an HTTP Request? - Sección 4, clase 30 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525284?start=0
+
+	Explicación de los parámetros recibidos y datos devueltos por Request.
+		error:
+								Objeto que almacena el error obtenido (si hay alguno, sino vuelve nulo) al realizar el request.
+								
+		response:
+			statusCode:	Respuesta del servidor que indica que el estado (200= ok, 404= pagina no encontrada, 500=  servidor dañado, etc...).
+								Es importante verificar el valor obtenido en esta propiedad al realizar el request, porque da información sobre si pudimos o no obtener lo que esperabamos del servidor.
+			body:			Es el mismo objeto body que se obtiene como tercer argumento de la funcion ejecutada cuando se obtiene una respuesta al request realizado.
+			headers:		Conjuto de pares de clave-valor de tipo string, que son parte del protocolo HTTP. Son enviados en los requests y son devueltos en el response.
+			request:			Información acerca de la solicitud (request) que se acaba de realizar. 
+								El request posee un objeto "headers", que contiene los headers que se enviaron desde nuestra aplicación durante la solicitud. 
+								En el ejemplo el header del request contiene. "accept": "application/json". 
+								Este header se creó cuando en la llamada a request se especificó: json: true.
+	
+Encoding User Input - Sección 4, clase 31 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525286?start=0
+
+	encodeURLComponent(string)
+		
+Callback Errors - Sección 4, clase 32 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525288?start=0
+
+Abstracting Callbacks - Sección 4, clase 33 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525290?start=0
+
+Wiring Up Weather Search - Sección 4, clase 34 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525292?start=0
+
+Chaining Callbacks Together - Sección 4, clase 35 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525294?start=0
+
+Intro to ES6 Promises - Sección 4, clase 36 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525296?start=0
+
+Advanced Promises - Sección 4, clase 37 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525306?start=0
+
+Weather App With Promises - Sección 4, clase 38 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525308?start=0
+
+Extra Features - Sección 4, clase 39 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525310?start=0
+
+Section Intro - Sección 5, clase 40 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525312?start=0
+
+Hello Express - Sección 5, clase 41 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525314?start=420
+
+	Instalación con: npm install express --save
+	
+	Uso e instanciación con:
+		const express = requiere('express');
+		const app = express();
+	
+	Definición de manejadores de rutas con:
+		
+
+
+
+ Continuar mirando desde: 

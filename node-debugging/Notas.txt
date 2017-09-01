@@ -1,0 +1,68 @@
+
+Debugging desde Chrome:
+-----------------------
+Se debe agregra la sentencia debugger; en donde se desea comenzar a debuggear.
+Luego se podría ejecutar: node debug app.js, pero es más fácil hacer el debugging utilizando 
+    las herramientas de desarrollador de Google Chrome:
+        node --debug-brk --inspect app.js
+Con esto va a aparecer una url que se puede acceder desde Chrome para debuggear la aplicación y al presionar Play la ejecución
+    se detendrá en la linea donde está la selinea con la sentencia 'debugger'.
+    Sin embargo no es necesario del todo escribir debugger en nuestro código, ya que al iniciar el debugging desde Chrome
+        la aplicación está detenida en la primera linea y se pueden agregar breakpoints haciendo click con el mouse en los
+        números de línea.
+
+Por lo tanto, en resumen:
+    Ejecutar desde la consola: 
+        node --debug-brk --inspect app.js
+    Navegar a la url que aparece, por ej:
+        chrome-devtools://devtools/remote/serve_file/@60cd6e859b9f557d2312f5bf532f6aec5f284980/inspector.html?experiments=true&v8only=true&ws=127.0.0.1:9229/03605bd7-df6
+4-4580-86b7-991fbc8c396e
+    Establecer los breakpoints que se desea que se ejecuten durante el debugging.
+    Navegar a la url de nuestra app (si esta por ejemplo crea un servidor http) para que se ejecute, ej:
+        http://localhost:3000
+    
+
+Debugging desde VSCode:
+-----------------------
+Se debe ir a la sección de debuggin (icono de bicho tachado) y en el combo al lado de "DEPURAR" hay que
+agregar una nueva configuración.
+Va a aparecer un desplable con opciones, elegir "Node.js"
+Se va a crear el archivo de configuración de debugging "launch.json" detro de una nueva carpeta ".vscode".
+En dicho archivo se debe especificar para "program", el nombre de archivo a debuggear, ej: "program": "app.js"
+    Mejor es poner como valor:
+        "program": "${file}"
+    con esto, cada vez que iniciemos el debugging, se va a debuggear el archivo que esté abierto actualmente en el editor.
+    y se debe agregar la linea:
+         "cwd": "${workspaceRoot}"   
+         Si nuestro archivo a debugger no está en el mismo nivel que la carpeta .vscode, se debe especificar
+            aca la ruta a la carpeta donde está el archivo:
+                "cwd": "${workspaceRoot}/carpeta/"  
+Asegurarse de que figure la entrada: 
+    "request": "launch"
+
+Por lo tanto, en resumen:
+    Establecer los breakpoints que se desea que se ejecuten durante el debugging. 
+    Ejecutar la aplicación desde el icono de Play para iniciar el debugging desde VSCode.
+    Navegar a la url de nuestra app (si esta por ejemplo crea un servidor http) para que se ejecute, ej:
+        http://localhost:3000
+
+Atacharse al proceso:
+    Una segunda sección de configuración que se puede agregar a launch.json es la que se utiliza para 
+    atacharse al proceso de alguna aplicación de Node.js que ya se esté ejecutando.
+    {
+        "type": "node",
+        "request": "attach",
+        "name": "Attach by Process ID",
+        "port": 5858,
+        "restart": true
+    }
+    Es util usarla con nodemon, ya que asi como nodemon re-ejecuta la aplicación cuando detecta una modificación
+    en el código, con la propiedad "restar: true", el debugger de VSCode va a reiniciar el debuggeo automaticamente
+    cuando detecte que la aplicación se volvió a iniciar (gracias a nodemon).
+
+Por lo tanto, en resumen:
+    Establecer los breakpoints que se desea que se ejecuten durante el debugging. 
+    Ejecutar la aplicación desde la termina con nodemon: nodemon --debug-brk app.js
+    Iniciar el debuggind de VSCode clickeando el icono de Play y verificando que esté seleccionado "Attach".
+    Navegar a la url de nuestra app (si esta por ejemplo crea un servidor http) para que se ejecute, ej:
+        http://localhost:3000
