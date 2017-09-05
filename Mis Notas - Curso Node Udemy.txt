@@ -346,9 +346,68 @@ Hello Express - Sección 5, clase 41 - https://www.udemy.com/the-complete-nodejs
 		const express = requiere('express');
 		const app = express();
 	
-	Definición de manejadores de rutas con:
+		// Configuración de un handler para un request GET (una ruta):
+		app.get('/', (request, response) => {
+			// Primer argunmento la url
+			// Segundo parametro funcion a ejecutar cuando se haga la peticion a esa url
+			//  dicha función posee dos parámetros: request, response
+			//  request contiene el cuerpo de la solicitud, los headers, el metodo del request...
+			//  response contiene un monton de metodos para responder a la peticion de la manera que uno quiera (html a devolver, statusCode a devolver, etc)
+			response.send('<h1>Hola Express!</h1>'); // Permite responser enviando datos de vuelta al cliente.
+		});
+
+		// Declaración de otra ruta (handler):
+		app.get('/about', (request, response) => {
+			response.send('About page');
+		})
+
+		// Envio de un objeto JSON:
+		app.get('/bad', (req, resp)=> {
+			resp.send({
+				errorMessage: 'No se pudo completar la solicitud.'
+			})
+		})
+
+		// app.listen se utiliza para vincular nuestra aplicación a un puerto en nuestra maquina, 
+		// para poder recibir peticiones a las rutas configuradas.
+		// ******    Hasta que no se ejecuta esa linea, la aplicación no es capaz de recibir ni responder solicitudes.
+		app.listen(3000);       // 3000 es el puerto elegido para servir nuestra aplicación, para utilizar navegando a: http://localhost:3000
+
+		// Al ejecutar la aplicación, la misma se queda corriendo, esperando requests a los que responder
+		// y nunca se va a detener, hasta que sean presionadas las teclas con CTRL+c
+
+
+Creating a Web Server - Sección 5, clase 42 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525316?start=0
+
+	Servir un directorio estático con imagenes, css, javascript, etc, sin tener que setear una ruta por cada uno:
+		Creación y uso de un Middleware:
+			Los Middlewares permiten configurar como funciona una aplicación web hecha con Express, agregando la funcionalidad que queramos como si usaramos un plugin o addon.
 		
+		Se crea el directorio con contenido estatico deseado, por ej: /public
+		Se agrega la llamada app.use() que es la forma que provee Express para permitirnos ejecutar nuestros middlewares.
+		Se le pasa en este caso un función provista por Express llamada static:
+			app.use( express.static(__dirname + '/public') );
+		
+		"__dirname" almacena la ruta completa a la carpeta raiz del proyecto actual, por lo tanto "__dirname + '/public'" hace referencia a: "c:\proyectoActual\public"
+		
+Rendering Templates with Data - Sección 5, clase 43 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525318?start=0
+
+	Utilización de un motor de templates con Express: Handlebarsjs.com
+	
+	Existe y se utiliza junto con Express un modulo que se llama HBS, que permite utilizar Handeblars de una manera más fácil: npmjs.com/package/hbs
+	
+	Instalación:
+		npm install hbs --save
+	Configuración de Express para que utilice como motor de planitallas a hbs:
+		app.set('view engine', 'hbs');
+		
+	Para guardar las vistas, se crea una carpeta llamada Views (por convención).
+		Las mismas son archivos html con extensión .hbs, pero soportan que se les pase un objeto cuando se las renderiza y las propiedades de dicho
+			objeto se pueden mostrar en el cliente invocandolas entre doble llaves:		{{mensajeBievenida}}
 
 
+	
 
+
+	
  Continuar mirando desde: 
