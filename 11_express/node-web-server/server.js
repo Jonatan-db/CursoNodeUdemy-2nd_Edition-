@@ -12,9 +12,9 @@ app.set('view engine', 'hbs');  // Le digo a Express que motor de vistas utiliza
 // Esta función toma como parámetro la ruta absoluta del directorio que se desea servir, por lo que se utiliza __dirname para
 // obtener la referencia a la carpeta raiz del proyecto, junto con el nombre o la ruta de la carpeta con contenido estatico a servir:
 app.use(express.static(__dirname + '/public'));
+    // Esto permite por ejemplo acceder directamente al archivo static.html desde: localhost:3000/static.html
 
-
-// Configuración de handlers para responder a requests GET:
+// Configuración de handlers de rutas para responder a requests GET:
 
 // Ruta '/':
 app.get('/', (request, response) => {
