@@ -1,13 +1,15 @@
 
-	Descargar Node.js desde	https://nodejs.org/en/
-	
-	Instalar la versión "Current"
+	Repositorio Git de los ejercicios:	
+		https://github.com/Jonatan-db/CursoNodeUdemy-2nd_Edition-
+		
+	Descargar Node.js:
+		Https://nodejs.org/en/			Instalar la versión "Current"
 	
 	Verificar que se instaló, ejecutando desde la consola: node -v
 	
 	
 	¿Que es Node?
-		Es un runtime de javascript, que usa el motor V8.
+		Es un runtime de javascript, que usa el motor V8 y que corre desde la linea de comandos de Windows.
 	
 	¿Que es V8?
 		Es un motor de javascript open source escrito en C++, que toma codigo javascript y lo compila en código maquina. 
@@ -388,16 +390,18 @@ Creating a Web Server - Sección 5, clase 42 - https://www.udemy.com/the-complet
 		Se le pasa en este caso un función provista por Express llamada static:
 			app.use( express.static(__dirname + '/public') );
 		
-		"__dirname" almacena la ruta completa a la carpeta raiz del proyecto actual, por lo tanto "__dirname + '/public'" hace referencia a: "c:\proyectoActual\public"
+"__dirname" almacena la ruta completa a la carpeta raiz del proyecto actual, por lo tanto "__dirname + '/public'" hace referencia a: "c:\proyectoActual\public"
+
 		
 Rendering Templates with Data - Sección 5, clase 43 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525318?start=0
 
 	Utilización de un motor de templates con Express: Handlebarsjs.com
 	
-	Existe y se utiliza junto con Express un modulo que se llama HBS, que permite utilizar Handeblars de una manera más fácil: npmjs.com/package/hbs
+	Se utiliza junto con Express un modulo que se llama HBS, que permite utilizar Handeblars de una manera más fácil: npmjs.com/package/hbs
 	
 	Instalación:
 		npm install hbs --save
+		
 	Configuración de Express para que utilice como motor de planitallas a hbs:
 		app.set('view engine', 'hbs');
 		
@@ -405,9 +409,63 @@ Rendering Templates with Data - Sección 5, clase 43 - https://www.udemy.com/the
 		Las mismas son archivos html con extensión .hbs, pero soportan que se les pase un objeto cuando se las renderiza y las propiedades de dicho
 			objeto se pueden mostrar en el cliente invocandolas entre doble llaves:		{{mensajeBievenida}}
 
-
+	Para "renderizarlas" (usarlas), se utilizar en lugar de la llamada a response.send(), la llamada a response.render( nombre de la vista, objeto con datos):
+			app.get('/', (request, response) => {
+				response.render('home.hbs', {			// El nombre de la vista tal cual existe dentro de la carpeta "views"
+				   pageTitle: 'Jom peish',
+				   currentYear: new Date().getFullYear(), 
+				   welcomeMessage: 'Bienvenido a mi sitio con Noud giés'
+			   });
+			});
 	
+Advanced Templating - Sección 5, clase 44 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525320?start=0
 
-
+	Partials:
+		Es una parte parcial del sitio web que se puede reutilizar en distintas paginas.
+		
+	Se debe configurar hbs para que conozca la carpeta donde estarán los partials:
+		hbs.registerPartials(__dirname + '/views/partials/');
 	
- Continuar mirando desde: 
+	En la carpeta /views/partials se deben crear los partials con extensión .hbs, ej:
+		footer.hbs:
+			<footer>
+				<p>Copyright {{currentYear}}</p>
+			</footer>
+		Como se puede apreciar, los partials pueden utilizar las propiedades de los objetos pasados a las paginas que los invocan o consumen (ej, currentYear).
+	
+	Para hacer referencia a un partial desde una vista, se deben llamar al partial de la siguiente manera: 		{{> nombreDelPartial }}
+		Ej:
+			{{> Footer}}
+			
+	Para que nuestro servidor web se reinicie cada vez que se modifica un partial y se puede ver la modificación enseguida
+		se debe ejecutar nodemon con unos flags especiales:
+			nodemon server.js -e js,hbs
+		con esto se le especifica que debe estar atento a los cambios, para reiniciarse automaticamente, cuando se modifican archivos con extension .js y .hbs (los de las vistas o partials)
+	
+	Funciones (Helpers) en Handeblars:
+		Las funciones se consideran Helpers y se registran en hbs como los partials, pero con una método para tal fin:
+			hbs.registerHelper('nombreDeLaFuncionHelper', () => {
+				contenido de la función
+				debe devolverse el dato con return.
+			}
+		ej:
+			hbs.registerHelper('getFullYear', () => {
+				return new Date().getFullYear();
+			});
+		Luego este 'helper' se puede utilizar desde dentro de las vistas o los partials:
+			ej, partial 'footer.hbs':
+			<footer>
+				<p>Copyright {{getFullYear}}</p>
+			</footer>
+			
+		Los helpers también pueden recibir parametros:
+			hbs.registerHelper('aMayusculas', (texto) => {
+				return texto.toUpperCase();
+			});
+		y se puede utilizar así:
+			<p>{{ aMayusculas welcomeMessage}}</p>
+			
+		
+			
+			
+			

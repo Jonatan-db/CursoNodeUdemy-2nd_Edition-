@@ -7,10 +7,12 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>{{pageTitle}}</h1>
-    <p>{{welcomeMessage}}</p>
-    <footer>
-        Copyright {{currentYear}}
-    </footer>
+    {{> header}}
+
+    <p>{{ aMayusculas welcomeMessage}}</p>
+
+    <p>Desde acá también puedo usar los helpers: getCurrentYear = {{getCurrentYear}}</p>
+
+    {{> footer}}
 </body>
 </html>
