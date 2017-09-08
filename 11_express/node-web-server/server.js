@@ -1,13 +1,60 @@
 const express = require('express');
 const hbs = require('hbs');
+const fs = require('fs');
 
 var app = express();
-
-app.set('view engine', 'hbs');  // Le digo a Express que motor de vistas utilizar.
 
 // Registro de ruta donde se encuentran los partials:
 hbs.registerPartials(__dirname + '/views/partials/');
 
+// Seteando el motor de vistas que utilizará Express:
+app.set('view engine', 'hbs');  // Le digo a Express que motor de vistas utilizar.
+
+// Middleware para indicar que el sitio está en mantenimiento.
+// IMPORTANTE: 
+//  Debe estar antes de todas las rutas
+//  y antes de servir la carpeta de archivos estáticos, sino éstos se podrán acceder de todas formas.
+// app.use( (req, res, next) => {
+//   res.render('maintenance.hbs');
+// });
+
+
+/* Sirviendo archivos estáticos:
+ Creación y uso de un Middleware para servir la carpeta public
+ Los Middlewares permiten configurar como funciona una aplicación web hecha con Express.
+ Para agregar un Middleware se utiliza app.use(funcionAUtilizar);
+ En este caso se le pasa una función provista por Express para servir directorio con contenido estatico.
+ Esta función toma como parámetro la ruta absoluta del directorio que se desea servir, por lo que se utiliza __dirname para
+ obtener la referencia a la carpeta raiz del proyecto, junto con el nombre o la ruta de la carpeta con contenido estatico a servir:
+     Esto permite por ejemplo acceder directamente al archivo static.html desde: localhost:3000/static.html */
+app.use(express.static(__dirname + '/public'));
+    
+
+
+// Creación y uso de un middlewares:
+app.use((req, res, next) => {
+    // Por defecto recibe estos tres parámetros
+    // donde next es una referencia que hay que llamar para que luego de este se ejecuten los demás
+    // middlewares que existan en la aplicación y con esto permitimos que la aplicación continúe su ejecución.
+
+    /* Uso de Middleware para loggeo de accesos al sitio */
+    let ahora = new Date();
+    let log = `${ahora}: ${req.method} a ${req.url} \n`;
+
+    console.log(log);
+
+    // Agrego a un archivo de logueo "server.log", el registro de cada solicitud realizada a mi sitio:
+    fs.appendFile('server.log', log, (err) => {
+        if(err){
+            console.log('No se pudo crear o modificar el archivo de logs.');
+        }
+    });
+    
+    next(); // **** Si no se llama a next() la aplicación queda tildada, no responde a ningún tipo de solicitud.
+});
+
+
+// Creación de Helpers: 
 hbs.registerHelper('getCurrentYear', () => {
     return new Date().getFullYear();
 });
@@ -16,21 +63,6 @@ hbs.registerHelper('aMayusculas', (texto) => {
     return texto.toUpperCase();
 });
 
-/* 
- { Creación y uso de un Middleware para servir la carpeta public
- Los Middlewares permiten configurar como funciona una aplicación web hecha con Express.
- Para agregar un Middleware se utiliza app.use(funcionAUtilizar);
- En este caso se le pasa una función provista por Express para servir directorio con contenido estatico.
- Esta función toma como parámetro la ruta absoluta del directorio que se desea servir, por lo que se utiliza __dirname para
- obtener la referencia a la carpeta raiz del proyecto, junto con el nombre o la ruta de la carpeta con contenido estatico a servir:
-     Esto permite por ejemplo acceder directamente al archivo static.html desde: localhost:3000/static.html */
-app.use(express.static(__dirname + '/public'));
-
-/* Uso de Middleware para loggeo de accesos al sitio */
-app.use((req, res, next) => {
-   console.log(`${new Date().toDateString()}: ${req.method} a ${req.url} `);
-    next();
-});
 
 // Configuración de handlers de rutas para responder a requests GET:
 
