@@ -26,6 +26,12 @@ hbs.registerHelper('aMayusculas', (texto) => {
      Esto permite por ejemplo acceder directamente al archivo static.html desde: localhost:3000/static.html */
 app.use(express.static(__dirname + '/public'));
 
+/* Uso de Middleware para loggeo de accesos al sitio */
+app.use((req, res, next) => {
+   console.log(`${new Date().toDateString()}: ${req.method} a ${req.url} `);
+    next();
+});
+
 // Configuración de handlers de rutas para responder a requests GET:
 
 // Ruta '/':
@@ -40,7 +46,7 @@ app.get('/', (request, response) => {
    response.render('home.hbs',{
        pageTitle: 'Jom peish',
        welcomeMessage: 'Bienvenido a mi sitio con Noud yiés'
-   })
+   });
 });
 
 // Ruta '/json':
