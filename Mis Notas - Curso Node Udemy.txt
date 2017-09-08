@@ -465,7 +465,28 @@ Advanced Templating - Sección 5, clase 44 - https://www.udemy.com/the-complete-
 		y se puede utilizar así:
 			<p>{{ aMayusculas welcomeMessage}}</p>
 			
+Express Middleware - Sección 5, clase 45 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525322?start=0
+
+	Creación y utilización de middlewares.
+	Son funciones que se ejecutan en el medio entre la solicitud del cliente y la respuesta que nuestra aplicación devuelve.
+	Se utiliza en su modo mas basico para logueo, pero se puede realizar cualquier validación o procesamiento que se desee.
+	Se usan simplemente invocando: app.use( (request, response, next) => {+);
+		Recibe como parametro una funcion, la cual recibe tres parametros:   request, response y next
+		next es una referencia a una funcion que debe ser invocada si o si para que se continue con la ejecucion de la aplicación, por lo que 
+		luego de programar la funcionalidad deseada en nuestro middleware, se debe invocar como ultima linea a next();
+		en caso de no hacerlo, la aplicación quedará colgada, sin responder ningún tipo de solicitud.
 		
+	Agregado de un middleware para poner el sitio en mantenimiento, utilizando una vista con un mensaje para informar de tal caso:
+		app.use( (req, res, next) => {
+			res.render('maintenance.hbs');
+		});
+		En este caso se renderizará la vista de mantenimiento con un simple titular que informa tal situación.
+	IMPORTANTE:
+		Este middleware para mostrar el mensaje de mantenimiento DEBE ser llamado ANTES de todas las rutas
+		y también ANTES de servir la carpeta con archivos estáticos, sino se va a poder acceder a ellos de todas formas.
+		
+	
+	
 			
 			
 			
