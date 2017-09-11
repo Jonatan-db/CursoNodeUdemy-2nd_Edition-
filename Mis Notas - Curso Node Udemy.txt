@@ -470,12 +470,15 @@ Express Middleware - Sección 5, clase 45 - https://www.udemy.com/the-complete-n
 	Creación y utilización de middlewares.
 	Son funciones que se ejecutan en el medio entre la solicitud del cliente y la respuesta que nuestra aplicación devuelve.
 	Se utiliza en su modo mas basico para logueo, pero se puede realizar cualquier validación o procesamiento que se desee.
-	Se usan simplemente invocando: app.use( (request, response, next) => {+);
+	Se usan simplemente invocando: app.use( (request, response, next) => {});
 		Recibe como parametro una funcion, la cual recibe tres parametros:   request, response y next
 		next es una referencia a una funcion que debe ser invocada si o si para que se continue con la ejecucion de la aplicación, por lo que 
 		luego de programar la funcionalidad deseada en nuestro middleware, se debe invocar como ultima linea a next();
 		en caso de no hacerlo, la aplicación quedará colgada, sin responder ningún tipo de solicitud.
-		
+		Request posee toda la información relacionada con la solicitud actual.
+		Response esta instanciado pero no está completo (porque falta que sea procesado por el "servidor") y se puede utilizar para por ejemplo finalizar la
+			ejecución de la aplicación (por la razón que consideremos) invocando por ej: response.end();
+			
 	Agregado de un middleware para poner el sitio en mantenimiento, utilizando una vista con un mensaje para informar de tal caso:
 		app.use( (req, res, next) => {
 			res.render('maintenance.hbs');
@@ -485,7 +488,62 @@ Express Middleware - Sección 5, clase 45 - https://www.udemy.com/the-complete-n
 		Este middleware para mostrar el mensaje de mantenimiento DEBE ser llamado ANTES de todas las rutas
 		y también ANTES de servir la carpeta con archivos estáticos, sino se va a poder acceder a ellos de todas formas.
 		
+Adding Version Control (Git) - Sección 5, clase 46 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5525324?start=0
+
+	Descarga e instalación de Git desde http://git-scm.com
+	Durante la instalación se debe seleccionar la instalación de Git Bash, ya que permite crear claves SSH para conectarse con los repositorios online.
+	Se verifica que esté versión se encuentra instalada ejecutando:
+		git --version
+		
+	Creación de un repositorio:
+		Acceder a la carpeta que se desea convertir en un repositorio y ejecutar:
+			git init
+			con esto se crea una carpeta oculta llamada ".git", que NO se debe modificar por ninguna razón y es donde
+			git guarda toda la información sobre el versionado de los archivos del proyecto (la carpeta donde ejecutamos git init).
+			
+	Verificar estado de los archivos en el repositorio:
+		git status
+		Apareceran todos los archivos en el proyecto actual que no están siendo versionados
+		
+	Ignorar archivos con .gitignore
+		Se crea este archivo para especificar todos los archivos y carpetas que no se deseean versionar
+		Si por ejemplo tenemos un archivo de logs que no deseamos versionar, deberiamos agregar a .gitignore la siguiente linea:
+			archivodelog.log
+		Lo mismo para carpetas, como la de node_modules por ej:
+			node_modules/
+		quedando por lo tanto el archivo .gitignore de la siguiente manera:
+			logs.log
+			node_modules/
+		lo que nos asegura de que git no va a tener en cuenta nunca si estos archivos son modificados.
+		A partir de este momento, el archivo .gitignore debe ser agregado con git add para que de ahora en mas
+		se tenga en cuenta siempre (que git lea dicho archivo) todo lo que git debe ignorar.
+		
+	Agregar archivos a la supervisión de git y por ende para su versionado:
+		Se debe ejecutar:
+			git add nombreDeArchivo
+			ej:
+				git add package.json
+		una vez hecho esto, git ya va a comenzar a controlar si ese archivo es modificado y permitirá su versionado (mediante commits)
+		Para agregar todo el proyecto al control de versionado de git, se debe ejecutar:
+			git add .
+		Ahora, si nuevamente se ejecuta:
+			git status
+			se va a mostrar la lista de archivos que están listos para commitear y también los que no (ya sea porque figuran en .gitignore o porque se crearon luego
+			de ejecutar git add .)
 	
+	Confirmando modificaciones realizadas en el repositorio con Commit:
+		Luego de hacer git status se pueden ver los archivos que estan agregados al versionado y listos para commitear (confirmar que se desean versionar en su estado actual)
+		Para esto se debe ejecutar:
+			git commit -m "algun mensaje sobre el commit, por ejemplo Primer commit"
+		una vez realizado esto, los archivos quedan versionados y por mas que luego sean modificados se podrá volver a esta versión especifica de los mismos en cualquier momento.
+	
+	Luego se puede vincular este repositorio con uno en algún servidor, por ejemplo en github / gitlab / bitbucker, etc con el comando:
+		git add remote nombreDelRemote URLDelRemote
+	
+	También se puede subir el codigo del repositorio al remote con el comando:
+		git push origin master
+		
+
 	
 			
 			
