@@ -543,8 +543,40 @@ Adding Version Control (Git) - Sección 5, clase 46 - https://www.udemy.com/the-
 	También se puede subir el codigo del repositorio al remote con el comando:
 		git push origin master
 		
+		
+Real-Time Web Apps with Socket.io
 
+Creating a New Project - Sección 9, clase 105 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5795054?start=0
+
+	Creación de un nuevo proyecto, una aplicación de chat en tiempo real, utilizando Socket.io
+	Utilización del modulo integrado en Node llamado Path, el cual detecta y permite armar paths correctos cuando se trabaja desde archivos que están
+		en carpetas mas adentro de la raiz del proyecto y se tiene que referenciar carpetas en distintas partes de la estructura de carpetas del proyecto.
 	
-			
-			
+	Si desde el archivo server.js que se ubica dentro de la carpeta server, se quiere hacer referencia a la carpeta public, que se encuentra en la raiz del proyecto	
+		al hacer desde server.js esta llamada:
+			console.log(__dirname + '../public');
+		se obtiene este resultado:
+			C:\CursoNodeUdemy-2nd_Edition-\12_node-chat-app\server../public
+		el cual está mal, porque incluye un par de puntos.
+		Para esto sirve utilizar el modulo Path de Node, el mismo se utiliza de la siguiente manera:
+			const path = require('path');
+			console.log(path.join(__dirname, '../public'));
+		lo que al ejecutarse devuelve:
+			C:\CursoNodeUdemy-2nd_Edition-\12_node-chat-app\public
+		esta ruta si es apta para referenciar archivos y carpetas en relación al directorio raiz del proyecto, sin problema alguno.
+		
+	Servido de archivos estáticos con express:
+		const publicPath = path.join(__dirname, '../public');
+		const app = express();
+		app.use(express.static(publicPath));
+	
+	/* Extra sacado de la ayuda de git */
+		Leer la configuración de git:	https://git-scm.com/book/es/v1/Fundamentos-de-Git-Consejos-y-trucos
+			git config --local -l
+			git config --global -l
+			git config --system -l
+		Setear alias:
+			git config --global alias.st status				Con esto se puede conocer el status ejecutando: git st 
+			git config --global alias.ci commit				Con esto se puede hacer commit ejecutando: git ci -m "mensaje del commit"
+			git config --global alias.last 'log -1 HEAD'		Con esto se puede ver el comentario del ultimo commit: git last
 			
