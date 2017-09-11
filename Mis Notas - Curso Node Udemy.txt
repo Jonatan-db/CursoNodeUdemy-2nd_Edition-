@@ -579,4 +579,6 @@ Creating a New Project - Sección 9, clase 105 - https://www.udemy.com/the-compl
 			git config --global alias.st status				Con esto se puede conocer el status ejecutando: git st 
 			git config --global alias.ci commit				Con esto se puede hacer commit ejecutando: git ci -m "mensaje del commit"
 			git config --global alias.last 'log -1 HEAD'		Con esto se puede ver el comentario del ultimo commit: git last
-			
+	/* Extra sacado de la ayuda de git */
+	
+	
