@@ -764,6 +764,10 @@ Emitting and Listening to Events - Sección 9, clase 107 - https://www.udemy.com
 
 Emitting and Listening to Events (Solution) - Sección 9, clase 108 - 	https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5795060?start=0
 
+	Solución de desafíos planteados en el capitulo anterior.
+	
+Broadcasting Events - Sección 9, clase 109 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5795062?start=0
+
 	
 	
 		
