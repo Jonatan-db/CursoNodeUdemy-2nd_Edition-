@@ -729,9 +729,43 @@ Adding Socket.io to an App - Sección 9, clase 106 - https://www.udemy.com/the-c
 	/* */
 	
 
+Emitting and Listening to Events - Sección 9, clase 107 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5795058?start=0
+
+	Emitiendo y escuchado eventos personalizados:
+		Se envian y reciben datos especificos, desde el cliente al servidor y al revés.
 		
+	*** IMPORTANTE ***
+		Desde el js del lado de cliente no se debe utilizar funciones arrow, ya que solo funcionan desde Chrome, pero no desde dispositivos móviles y otros navegadores.
 		
-		
+	Enviar mensaje del cliente al servidor:
+		var socket = io();
+		socket.on('connect', function () {
+			socket.emit('mensajeDelUsuario', { from: "Usuario", to: "Server" });
+		});
+			
+	Enviar mensaje del servidor al cliente:
+		var io = socketIO(server);
+		io.on('connection', (socket) => {
+			socket.emit('mensajeDelServer', { from: "Server", to: "Usuario" });
+		});
+	
+	Escuchar mensaje del servidor en el cliente:
+		socket.on('mensajeDelServer', function (mensaje){
+			console.log("Mensaje del server: ", mensaje);
+		})
+
+	Escuchar mensaje del cliente en el servidor:
+		var io = socketIO(server);
+		io.on('connection', (socket) => {
+			socket.on('mensajeDelUsuario', (mensaje) =>{
+				console.log("Mensaje del usuario: ", mensaje);
+			});
+		});
+
+Emitting and Listening to Events (Solution) - Sección 9, clase 108 - 	https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5795060?start=0
+
+	
+	
 		
 		
 	
