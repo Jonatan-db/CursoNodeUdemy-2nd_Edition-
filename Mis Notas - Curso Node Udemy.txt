@@ -569,16 +569,25 @@ Creating a New Project - Sección 9, clase 105 - https://www.udemy.com/the-compl
 		const publicPath = path.join(__dirname, '../public');
 		const app = express();
 		app.use(express.static(publicPath));
+		Una vez hecho esto, se podrá acceder a todos los archivos dentro la carpeta public directamente, usando una url como: http://www.misitio.com/nombreArchivoDentroDePublic 
+			por ej:		Http://localhost:3000/archivopublico.html	
+							Http://localhost:3000/imagen.jpg
 	
 	/* Extra sacado de la ayuda de git */
 		Leer la configuración de git:				https://git-scm.com/book/es/v1/Fundamentos-de-Git-Consejos-y-trucos
 			git config --local -l
 			git config --global -l
 			git config --system -l
-		Setear alias:
+		Crear alias:
 			git config --global alias.st status				Con esto se puede conocer el status ejecutando: git st 
 			git config --global alias.ci commit				Con esto se puede hacer commit ejecutando: git ci -m "mensaje del commit"
+				Alternativa: 
+					git config --global alias.ci 'commit -m'	Con esto se puede hacer commit ejecutando: git ci "mensaje del commit"		(Me ahorro también tener que poner -m
 			git config --global alias.last 'log -1 HEAD'		Con esto se puede ver el comentario del ultimo commit: git last
+		Borrar alias:
+			git config --global --unset alias.NombreDelAliasABorrar
+		** En caso de generarse alias duplicados o erroneos, se puede manipular directamente el archivo .gitconfig, 
+			ubicado en la carpeta del usuario de Windows logueado: C:\Users\usuarioActual/.gitconfig
 	/* Extra sacado de la ayuda de git */
 	
 	Creación de un repositorio en Github para este proyecto:
@@ -597,7 +606,7 @@ Creating a New Project - Sección 9, clase 105 - https://www.udemy.com/the-compl
 					git remote get-url origin
 					
 		Subida del código fuente del proyecto al remoto deseado:
-			git push -u origin master			****	El modificador "-u" es importante cuando se trabaja en equipo, ya que primero trae la ultima versión y avisa si hay conflictos!!!! ***
+			git push -u origin master			****	El modificador "-u" es importante cuando se trabaja en equipo, ya que primero trae la última versión y avisa si hay conflictos!!!! ***
 			
 	Creación de una cuenta en Heroku para poner el proyecto online:
 		
@@ -615,9 +624,8 @@ Creating a New Project - Sección 9, clase 105 - https://www.udemy.com/the-compl
 							A partir de ahora, cada vez que se haga push a este repositorio "https://git.heroku.com/jonatandb-node-chat-app.git", la aplicación se
 								va a auto-deployar en el servidor de Heroku y se podrá acceder a dicha versión desde la url "https://jonatandb-node-chat-app.herokuapp.com/".
 					git push -u heroku master 	****	El modificador "-u" es importante cuando se trabaja en equipo, ya que primero trae la ultima versión y avisa si hay conflictos!!!! ***
-						Con esto se sube el código local al repositorio del repositorio git dentro de heroku vinculado con la aplicación y se implementa
-						(instala y queda lista para usar) automaticamente.
-						También se mostrará el log en la consola a medida que se realiza la implementación. Este es un detalle de como Heroku lee el package.json e instala todo en el servidor.
+						Con esto se sube el código local al repositorio git dentro de heroku vinculado con la aplicación y se implementa (instala y queda lista para usar) automaticamente.
+						También se mostrará el log en la consola a medida que se realiza la implementación. (Este es un detalle de como Heroku lee el package.json e instala todo en el servidor.)
 					heroku ps:scale web=1
 						Permite verificar que al menos una instancia de la aplicación está ejecutándose en el servidor.
 					heroku open
@@ -643,4 +651,88 @@ Creating a New Project - Sección 9, clase 105 - https://www.udemy.com/the-compl
 								2017-09-13T16:19:14.789196+00:00 heroku[web.1]: Stopping all processes with SIGTERM
 								2017-09-13T16:19:15.182312+00:00 heroku[web.1]: Process exited with status 143		
 
-		Según Heroku, se recomienda crear un archivo Procfile (https://devcenter.heroku.com/articles/getting-started-with-nodejs#define-a-procfile), aunque a mi me funcionó la app de una.	
+		Según Heroku, se recomienda crear un archivo Procfile, aunque a mi me funcionó la app de una. (https://devcenter.heroku.com/articles/getting-started-with-nodejs#define-a-procfile).
+
+Adding Socket.io to an App - Sección 9, clase 106 - https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/t/lecture/5795056?start=0
+
+	Sockets:
+				Tienen una tecnologia persistente, lo que significa que tanto el cliente como el servidor mantienen el canal de comunicación abierto por todo el tiempo que ambos quieran.
+				Si el servidor se desconecta, el cliente no tiene opción
+				Si el cliente se desconecta, el servidor tampoco tiene opción.
+					Si el usuario cierra la ventana del navegador, el servidor no lo puede forzar a mantenerla abierta.
+				Ahora, cuando la conexión se pierde, el cliente se va a mantener intentando reconectar con el servidor, y si el servidor vuelve a estar disponible la conexión se volverá a establecer.
+					
+	
+	Configuración de la aplicación para permitir las conexiones por WebSockets entrantes (peticiones) desde el cliente.
+	
+	Se utiliza el módulo Socket.io, permite de una forma simple configurar nuestra aplicación servidor para que soporte web sockets y crear la interfaz que comunica
+		al cliente con el servidor.
+	Posee dos librerias, de backend y de fontend, se deben utilizar ambas.
+	
+	Instalación del módulo del lado servidor:
+		npm install socket.io --save
+		
+	Inclusión en nuestro servidor:
+	const socketIO = require('socket.io');
+	
+	Para poder agregar el soporte de Socket.io, se debe configurar el módulo interno de Node llamado HTTP (que es utilizado también internamente por Express):
+		const http = require('http');
+		y como Express hace una llamada a http.createServer cuando se ejecuta app.listen, se vincula el modulo http con Express mediante la llamada a:
+			var server = http.createServer(app);		// app es la instancia de Express.
+		con este cambio y con la llamada a server en lugar de app.listen, ya quedan vinculados el modulo http con express para la incorporación y uso de Socket.io:
+			En lugar de hacer:
+				app.listen(port, ()=>{ console.log(`Servidor corriendo en: http://localhost:${port}`); });
+			Se debe hacer ahora:
+				server.listen(port, ()=>{ console.log(`Servidor corriendo en: http://localhost:${port}`); });
+		Configurar socket.io desde el lado servidor:
+			var io = socketIO(server);			// Se le pasa el server con el cual se quiere usar Web Sockets.
+				Lo que se tiene en la variable io ahora es un servidor de web sockets.
+				A partir de ahora podemos realizar todo lo que queramos en cuanto a la emisión y recepción de eventos.
+					Asi es como se va a comunicar nuestra aplicación desde el lado servidor con el lado del cliente.
+		Configurar socket.io desde el lado cliente:
+			Para permitir el proceso de conexión ahora se debe cargar en el código que va a estar del lado del cliente, la libreria javascript de Socket.io:
+				Por defecto, la libreria ya se encuentra accesible desde el lado del cliente (cuando ejecutamos nuestra app), pero para utilizarla hay que vincularla desde las paginas servidas
+					http://localhost:3000/socket.io/socket.io.js
+					Esta libreria contiene todo el codigo que se necesita ejecutar en el cliente para permitir la conexión con el servidor y transferir datos en ambas direcciones.
+				Agregar al index.html la llamada a la libreria, dentro de body:
+					<script src="/socket.io/socket.io.js"></script>
+					A partir de este momento se pueden utilizar las funcionalidades que provee la librería.
+					A continuación, se produce la incialiación de la libreria, llamando a "io()", esto inicializa el request entre el cliente con el servidor y abre un web socket que
+					 a partir de ese momento mantiene la conexión entre ambos, por lo que es importante almacenar en una variable el valor devuelto por este método.
+					Esta variable se utilizará para enviar datos al servidor y recibir la respuesta del mismo.
+						var socket = io();
+						
+			Luego, desde el cliente, se puede ejecutar funcionalidad de acuerdo a diferentes "eventos" que se produzcan, comenzando desde el primero y principal que es connect:
+				 <script>
+						var socket = io();
+						socket.on('connect', () => {
+							console.log('Conectado al servidor');
+						});
+				</script>
+
+			Y también se puede realizar lo mismo desde el servidor:
+				io.on('connection', (socket) => {
+					console.log('Nuevo usuario conectado');
+				});			
+			el método 'on' de Socket.io permite "registrar un event listener", lo que nos permite "escuchar" cuando se produce un evento específico y hacer algo cuando éste suceda,
+			este método recibe el nombre del evento a escuchar y una función a ejecutar cuando se "escuche" tal evento. Cuando esto suceda, la función va a recibir por parametro
+			el objeto "socket" mediante el cual se estableció la conexión entre el servidor y el cliente.
+	
+	/* Extra sacado de la ayuda de git */
+		git commit -am "mensaje"		Con el flag -am, nos ahorramos de hacer 'git add' a los archivos recientemente modificados.
+			El ciclo normal es crear o modificar algún archivo en nuestro repositorio y luego ejecutar git add nombreArchivo, para agregarlo al stage area (lugar temporal desde donde
+			se va a confirmar la modificación en nuestro repositorio cuando ejecutemos el git commit.
+			Con el uso de git 'commit -am' podemos obviar el 'git add', por lo que el ciclo puede realizarse de la siguiente manera:
+				Se crea o agrega un nuevo archivo al repositorio
+				Se ejecuta directamente 'git commit -am 'mensajeDelCommit'
+				Luego solo restaría hacer push en caso de que el repositorio tuviera vinculado un servidor remoto.
+	/* */
+	
+
+		
+		
+		
+		
+		
+	
+	
